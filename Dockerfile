@@ -1,32 +1,23 @@
-# Etapa 1: Build da aplicação
-FROM node:18-alpine AS build
-
-# Configura o diretório de trabalho dentro do container
-WORKDIR /app
-
-# Copia os arquivos de configuração do projeto para o container
-COPY package.json package-lock.json* ./
-
-# Instala as dependências
-RUN npm install
-
-# Copia o restante do código-fonte para o container
-COPY . .
-
-# Executa o build da aplicação
-RUN npm run build
-
-# Etapa 2: Servir os arquivos com o Vite
+# Use a imagem Node.js
 FROM node:18-alpine
 
 # Configura o diretório de trabalho
 WORKDIR /app
 
-# Copia os arquivos construídos da etapa anterior
-COPY --from=build /app /app
+# Copia os arquivos do projeto
+COPY package*.json ./
 
-# Expõe a porta padrão do Vite Preview (4173)
+# Instala as dependências
+RUN npm install
+
+# Copia o resto dos arquivos
+COPY . .
+
+# Gera o build
+RUN npm run build
+
+# Expõe a porta
 EXPOSE 4173
 
-# Comando padrão para rodar o servidor Vite
-CMD ["npm", "run", "preview"]
+# Comando para iniciar o servidor
+CMD ["npm", "run", "preview", "--", "--host"]
