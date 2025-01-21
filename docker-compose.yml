@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reacaonet-landpage
+    ports:
+      - "4173:4173"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - reacaonet-network
+
+networks:
+  reacaonet-network:
+    driver: bridge
